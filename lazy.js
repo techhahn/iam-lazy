@@ -6,13 +6,24 @@
             loaded;
 
         this.one("reveal", function() {
+          var self = this;
           if (this.getAttribute("data-src")) {
-            this.setAttribute("src", this.getAttribute("data-src"));
+            $('<img />', {
+              src: this.getAttribute("data-src")
+            }).load(function() {
+              self.setAttribute("src", self.getAttribute("data-src"));
+              $(self).removeClass(className);
+            });
           }
           else if (this.getAttribute("data-bg-src")) {
-            $(this).css('background-image', 'url("' + this.getAttribute("data-bg-src") + '")');
+            $('<img />', {
+              src: this.getAttribute("data-bg-src")
+            }).load(function() {
+              $(self).css("background-image", 'url("' + self.getAttribute("data-bg-src") + '")');
+              $(self).removeClass(className);
+            });
           }
-          $(this).removeClass(className);
+          
         });
 
         function reveal() {
@@ -23,7 +34,6 @@
                 windowHeight = windowTop + $w.height(),
                 elementTop = $e.offset().top,
                 elementTopnHeight = elementTop + $e.height();
-            console.log( windowTop + ' ' + windowHeight + ' ' +  elementTop );
             return elementTopnHeight >= windowTop && elementTop <= windowHeight;
           });
           loaded = inview.trigger("reveal");
